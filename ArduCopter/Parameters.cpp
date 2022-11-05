@@ -395,6 +395,39 @@ const AP_Param::Info Copter::var_info[] = {
     // @User: Advanced
     GSCALAR(land_repositioning, "LAND_REPOSITION",     LAND_REPOSITION_DEFAULT),
 
+    // ADDED BY FRANKY
+    // @Param: LAND_DET_TRIG_S
+	// @DisplayName: number of seconds to detect a landing
+    // @Description: number of seconds to detect a landing
+    // @Units: s
+    // @Range: 0.1 2
+    // @User: Advanced
+    GSCALAR(land_detector_trigger_sec,"LAND_DET_TRIG_S", LAND_DETECTOR_TRIGGER_SEC_DEFAULT),
+
+    // @Param: LAND_DET_MB_TRIG
+    // @DisplayName: number of seconds that means we might be landed
+    // @Description: number of seconds that means we might be landed.
+    // @Units: s
+    // @Range: 0.1 2
+    // @User: Advanced
+    GSCALAR(land_detector_maybe_trigger_sec,"LAND_DET_MB_TRIG", LAND_DETECTOR_MAYBE_TRIGGER_SEC_DEFAULT),
+
+    // @Param: LAND_DET_ACC_LPF
+    // @DisplayName: Frequency cutoff of land detector
+    // @Description: Frequency cutoff of land detector accelerometer filter.
+    // @Units: Hz
+    // @Range: 0.1 2
+    // @User: Advanced
+    GSCALAR(land_detector_accel_lpf_cutoff, "LAND_DET_ACC_LPF", LAND_DETECTOR_ACCEL_LPF_CUTOFF_DEFAULT),
+
+    // @Param: LAND_DET_ACC_MAX
+    // @DisplayName: nuvehicle acceleration must be under 1m/s/s
+    // @Description: vehicle acceleration must be under 1m/s/s
+    // @Units: m/s/s
+    // @Range: 0.1 2
+    // @User: Advanced
+	GSCALAR(land_detector_accel_max, "LAND_DET_ACC_MAX", LAND_DETECTOR_ACCEL_MAX_DEFAULT),
+
     // @Param: FS_EKF_ACTION
     // @DisplayName: EKF Failsafe Action
     // @Description: Controls the action that will be taken when an EKF failsafe is invoked
