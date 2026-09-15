@@ -361,6 +361,15 @@
 # define LAND_DETECTOR_VEL_Z_MAX              1.0f    // vehicle vertical velocity must be under 1m/s
 #endif
 
+//ADDED BY FRANKY/////////////////////////////////////////////
+#ifndef LAND_DETECTOR_RNGFND_DEFAULT
+# define LAND_DETECTOR_RNGFND_DEFAULT               0    // enable land detector on range finder instead of acceleration
+#endif
+#ifndef LAND_DETECTOR_MOT_LOW_DEFAULT
+# define LAND_DETECTOR_MOT_LOW_DEFAULT              0.1f // If using a RNGFND this value is used instead of Mot_at_lower_limit
+#endif
+// ADDED BY FRANKY
+
 //////////////////////////////////////////////////////////////////////////////
 // Flight mode definitions
 //

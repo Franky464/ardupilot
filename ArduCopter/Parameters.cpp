@@ -264,6 +264,22 @@ const AP_Param::Info Copter::var_info[] = {
     // @User: Advanced
     GSCALAR(land_repositioning, "LAND_REPOSITION",     LAND_REPOSITION_DEFAULT),
 
+        ////////////// ADDED BY FRANKY
+    // @Param: LAND_DET_RNGFND
+    // @DisplayName: Land detector options
+    // @Description: Defines if land detection uses lidar or acceleration
+    // @Values: 0:Standard, 1:Rangefinder mode (for large props)
+    // @User: Advanced
+    GSCALAR(land_detector_rngfnd, "LAND_DET_RNGFND", LAND_DETECTOR_RNGFND_DEFAULT),
+ 
+    // @Param: LAND_DET_MOT_LOW
+    // @DisplayName: Land detector motor low
+    // @Description: If using a RNGFND this value is used instead of Mot_at_lower_limit to trigger Land Detection
+    // @Range: 0 0.20
+    // @User: Advanced
+    GSCALAR(land_detector_mot_low, "LAND_DET_MOT_LOW", LAND_DETECTOR_MOT_LOW_DEFAULT),
+    //////////////// ADDED BY FRANKY
+
     // @Param: FS_EKF_ACTION
     // @DisplayName: EKF Failsafe Action
     // @Description: Controls the action that will be taken when an EKF failsafe is invoked

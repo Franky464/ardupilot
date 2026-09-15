@@ -387,6 +387,11 @@ public:
         k_param_throw_altitude_descend,
         k_param_throw_altitude_ascend,
 
+//ADDED BY FRANKY/////////////////////////////////
+        k_param_land_detector_rngfnd, // switch to regular land detection mode and big prop's mode
+        k_param_land_detector_mot_low, // If using a RNGFND this value is used instead of Mot_at_lower_limit
+//ADDED BY FRANKY/////////////////////////////////
+
         // the k_param_* space is 9-bits in size
         // 511: reserved
     };
@@ -446,6 +451,10 @@ public:
     AP_Int8         fs_crash_check;
     AP_Float        fs_ekf_thresh;
     AP_Int16        gcs_pid_mask;
+        //ADDED BY FRANKY//////////////////
+    AP_Int8             land_detector_rngfnd;
+    AP_Float            land_detector_mot_low;
+    // ADDED BY FRANKY
 
 #if MODE_THROW_ENABLED
     AP_Enum<ModeThrow::PreThrowMotorState>         throw_motor_start;

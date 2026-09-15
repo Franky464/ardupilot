@@ -134,6 +134,10 @@ void Copter::update_land_detector()
         bool rangefinder_check = (!rangefinder_alt_ok() || rangefinder_state.alt_m_filt.get() < LAND_RANGEFINDER_MIN_ALT_M);
         SET_LOG_FLAG(rangefinder_check, LandDetectorLoggingFlag::RANGEFINDER_BELOW_2M);
 
+        // if we have a healthy rangefinder only allow landing detection below 2 meters
+        bool rangefinder_check = (!rangefinder_alt_ok() || rangefinder_state.alt_m_filt.get() < LAND_RANGEFINDER_MIN_ALT_M);
+        SET_LOG_FLAG(rangefinder_check, LandDetectorLoggingFlag::RANGEFINDER_BELOW_2M);
+
         // if we have weight on wheels (WoW) or ambiguous unknown. never no WoW
 #if AP_LANDINGGEAR_ENABLED
         const bool WoW_check = (landinggear.get_wow_state() == AP_LandingGear::LG_WOW || landinggear.get_wow_state() == AP_LandingGear::LG_WOW_UNKNOWN);
@@ -142,9 +146,24 @@ void Copter::update_land_detector()
 #endif
         SET_LOG_FLAG(WoW_check, LandDetectorLoggingFlag::WOW);
 
-        if (motor_at_lower_limit && throttle_mix_at_min && !large_angle_request && !large_angle_error && accel_stationary && descent_rate_low && rangefinder_check && WoW_check) {
+// ADDED BY FRANKY <
+        // Custom land detector logic for large props / rangefinder
+        float height_m = rangefinder_state.alt_m_filt.get();
+        float mot_throttle = motors->get_throttle_out();
+        bool land_mot_low = mot_throttle < g.land_detector_mot_low;
+
+        // ground clearance in metres
+        float gnd_clear_m = rangefinder.ground_clearance_orient(ROTATION_PITCH_270);
+        bool height_gnd_clear = (height_m < gnd_clear_m) && (height_m > 0.0f);
+
+        bool test_mode = (g.land_detector_rngfnd == 1);
+// ADDED BY FRANKY >
+
+        if ((motor_at_lower_limit && throttle_mix_at_min && !large_angle_request && !large_angle_error && accel_stationary && descent_rate_low && rangefinder_check && WoW_check) ||
+            (test_mode && land_mot_low && descent_rate_low && throttle_mix_at_min && rangefinder_check && WoW_check && height_gnd_clear))
+        {
             // landed criteria met - increment the counter and check if we've triggered
-            if( land_detector_count < land_trigger_sec*scheduler.get_loop_rate_hz()) {
+            if (land_detector_count < land_trigger_sec * scheduler.get_loop_rate_hz()) {
                 land_detector_count++;
             } else {
                 set_land_complete(true);
