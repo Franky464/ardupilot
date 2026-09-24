@@ -360,6 +360,10 @@
 #ifndef LAND_DETECTOR_VEL_Z_MAX
 # define LAND_DETECTOR_VEL_Z_MAX              1.0f    // vehicle vertical velocity must be under 1m/s
 #endif
+#ifndef LAND_RANGEFINDER_DETECTOR_TRIGGER_SEC
+ # define LAND_RANGEFINDER_DETECTOR_TRIGGER_SEC 0.1f    // number of seconds to detect a landing with range finder
+#endif
+
 
 //ADDED BY FRANKY/////////////////////////////////////////////
 #ifndef LAND_DETECTOR_RNGFND_DEFAULT

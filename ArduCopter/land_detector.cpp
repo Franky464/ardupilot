@@ -98,6 +98,12 @@ void Copter::update_land_detector()
             land_trigger_sec = LAND_AIRMODE_DETECTOR_TRIGGER_SEC;
             throttle_mix_at_min = true;
         }
+        
+        bool land_rangefnd_mode = (g.land_detector_rngfnd == 1); // ADDED BY FRANKY (the range finder mode is active)
+
+        if (land_rangefnd_mode) { // takes the land_trigger_sec from the range finder land detector trigger time
+            land_trigger_sec = LAND_RANGEFINDER_DETECTOR_TRIGGER_SEC;
+        }
 #endif
         SET_LOG_FLAG(motor_at_lower_limit, LandDetectorLoggingFlag::MOTOR_AT_LOWER_LIMIT);
         SET_LOG_FLAG(throttle_mix_at_min, LandDetectorLoggingFlag::THROTTLE_MIX_AT_MIN);
@@ -152,11 +158,10 @@ void Copter::update_land_detector()
         float gnd_clear_m = rangefinder.ground_clearance_orient(ROTATION_PITCH_270);
         bool height_gnd_clear = (height_m < gnd_clear_m) && (height_m > 0.0f);
 
-        bool test_mode = (g.land_detector_rngfnd == 1);
 // ADDED BY FRANKY >
 
         if ((motor_at_lower_limit && throttle_mix_at_min && !large_angle_request && !large_angle_error && accel_stationary && descent_rate_low && rangefinder_check && WoW_check) ||
-            (test_mode && land_mot_low && descent_rate_low && throttle_mix_at_min && rangefinder_check && WoW_check && height_gnd_clear))
+            (land_mot_low && throttle_mix_at_min && descent_rate_low && rangefinder_check && WoW_check  && land_rangefnd_mode && height_gnd_clear)) // land_rangefnd_mode && height_gnd_clear instead of accel_stationary
         {
             // landed criteria met - increment the counter and check if we've triggered
             if (land_detector_count < land_trigger_sec * scheduler.get_loop_rate_hz()) {
