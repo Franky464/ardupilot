@@ -158,6 +158,31 @@ void Copter::update_land_detector()
         float gnd_clear_m = rangefinder.ground_clearance_orient(ROTATION_PITCH_270);
         bool height_gnd_clear = (height_m < gnd_clear_m) && (height_m > 0.0f);
 
+            // log support for rangefinder based land detection to be used on large frames
+	
+		AP::logger().Write("LNDT", "TimeUS,MotLL,TMM,AcSt,DeRat,RfCk,RFLD,HGC,MotLo","---------","00000000", "Qffffffff", // logging boolean values used for land detection
+		AP_HAL::micros64(),
+		(double)motor_at_lower_limit,	// This trigger means the drone is probably not flying as no thrust (possibly but unlikely descending)
+        (double)throttle_mix_at_min,	// This trigger is always true on LAND mode
+        (double)accel_stationary,	// This trigger means no frame acceleration: the drone is probably touching the ground (hardly true on big drone where propellers vibrations do blur the accel measurement)
+        (double)descent_rate_low,	// This trigger means no vertical speed means the drone is on ground only if the thrust is @ minimum (or close) at the mean time
+        (double)rangefinder_check,	// This trigger means the range finder is below LAND_RANGEFINDER_MIN_ALT_CM (2m) or not healthy, 
+        (double)land_rangefnd_mode,		// This recalls if RNGFND based Land_detector mode is currently used
+		(double)height_gnd_clear,	//This trigger will mean the drone is close the ground below RNGFND1_GNDCLEAR it will be the altenative to accel_stationary if LAND_DET_RNGFND = 1
+		(double)land_mot_low); //This trigger will switch when motor_at_lower_limit +5% used only if LAND_DET_RNGFND = 1
+										
+		AP::logger().Write("LNDV", "TimeUS,Acc,height,Zspd,GndClr,ThO,Ldc","-omnm%-","00BBB20", "Qffffff", // loging of variable values used for land detection
+		AP_HAL::micros64(),
+		(double)acceleration,	// 3D lowpass filtered acceleration to be compared with LAND_DET_ACC_MAX (will be ignored if LAND_DET_RNGFND = 1)
+        (double)height,			// Rangedinder height value to the ground 
+        (double)Zspeed,			// Vertical down speed
+		(double)gnd_clear,		// Parameter RNGFND1_GNDCLEAR
+		(float)mot_throttle,	// Average motor throttle 
+		(double)land_detector_count);	// Counts the number on cycles since Land detector conditions turned all true before LAND is completed
+
+
+
+
 // ADDED BY FRANKY >
 
         if ((motor_at_lower_limit && throttle_mix_at_min && !large_angle_request && !large_angle_error && accel_stationary && descent_rate_low && rangefinder_check && WoW_check) ||
