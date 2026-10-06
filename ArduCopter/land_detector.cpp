@@ -171,15 +171,15 @@ void Copter::update_land_detector()
 		(double)height_gnd_clear,	//This trigger will mean the drone is close the ground below RNGFND1_GNDCLEAR it will be the altenative to accel_stationary if LAND_DET_RNGFND = 1
 		(double)land_mot_low); //This trigger will switch when motor_at_lower_limit +5% used only if LAND_DET_RNGFND = 1
 										
-		AP::logger().Write("LNDV", "TimeUS,Acc,height,Zspd,GndClr,ThO,Ldc","-omnm%-","00BBB20", "Qffffff", // loging of variable values used for land detection
-		AP_HAL::micros64(),
-		(double)acceleration,	// 3D lowpass filtered acceleration to be compared with LAND_DET_ACC_MAX (will be ignored if LAND_DET_RNGFND = 1)
-        (double)height,			// Rangedinder height value to the ground 
-        (double)Zspeed,			// Vertical down speed
-		(double)gnd_clear,		// Parameter RNGFND1_GNDCLEAR
-		(float)mot_throttle,	// Average motor throttle 
-		(double)land_detector_count);	// Counts the number on cycles since Land detector conditions turned all true before LAND is completed
-
+        AP::logger().Write("LNDV", "TimeUS,Acc,height,Zspd,GndClr,ThO,Ldc",
+                           "-omnm%-", "00BBB20", "Qffffff",
+                           AP_HAL::micros64(),
+                           (double)land_accel_ef_filter.get().length(),  // Acc
+                           (double)height_m,                             // height
+                           (double)vel_d_ms,                             // Zspd
+                           (double)gnd_clear_m,                          // GndClr
+                           (double)mot_throttle,                         // ThO
+                           (double)land_detector_count);                 // Ldc
 
 
 
